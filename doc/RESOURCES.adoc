@@ -10,7 +10,7 @@ In RRL you allocate resources with the `get` instruction:
 Resource providers are invoked by the RRL interpreter, they must be executables in the _providers_ directory. The requested resource names will be sent to the providers stdin upon execution. Provides must write (to stdout) a JSON indicating the URL for earch resource_name that was requested.
 
 Example:
-```
+```bash
 cat | providers/system/system << _EOF_
     { 
         "action": "get",
@@ -20,12 +20,15 @@ cat | providers/system/system << _EOF_
     } 
 _EOF_
 ```
-call resources/system:
-The reply:    
-    { 
-        'status' : 'success', 
-        'resources: [ 
-            { 'url' : 'canvas-345' }
-            ]
-    }
+
+The response:
+```json
+{
+    "status": "success",
+    "resources": [
+        {
+            "url": "http://127.0.0.1:45873"
+        }
+    ]
+}
 ```

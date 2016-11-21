@@ -13,7 +13,7 @@ def handle_request(request_data):
     request = json.loads(request_data)
     resource_list = request['resources']
     response = {}
-    response['status'] = 'sucess'
+    response['status'] = 'success'
     response['resources'] = rerource_url_list = []
     for resource in resource_list:
         resource_name = resource['name']
@@ -22,7 +22,7 @@ def handle_request(request_data):
         process = Popen([providers_path], stdout=PIPE, stderr=STDOUT)
         resource_url = process.stdout.readline()
         rerource_url_list.append({"url": resource_url.decode("utf-8") .strip("\n")})
-    print(json.dumps(response))
+    print(json.dumps(response, indent=4))
 
 if __name__ == '__main__':
     handle_request(sys.stdin.read())
