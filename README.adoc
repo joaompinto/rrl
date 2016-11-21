@@ -1,0 +1,26 @@
+= Relational Resources Language
+RRL is an experimental -natural alike- language that should help creating digital artifacts by relating publicly available resources.
+
+The following example should produce a canvas based image:
+
+```    
+    get canvas from system
+
+    get blue_sky from image_gallery/backgrounds # Not implemented yet
+    get banana, orange from image_gallery/fruits # Not implemented yet
+   
+    place blue_sky on canvas # Not implemented yet
+    place banana on blue_sky # Not implemented yet
+``` 
+
+== Providers
+This initial work contains only the _system_ provider, with a canvas provider skeleton (using pygame).
+Documentation for providers can be found at  link:doc/RESOURCES.adoc[Resources] .
+
+=== Examples
+You can run the examples from the source dir without installing the package with:
+```
+python -m rrl run examples/canvas.rrl
+```
+
+More documentation

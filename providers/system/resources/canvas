@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+""
+
+import sys
+from pygame.locals import *
+import pygame
+import random
+
+
+from threading import Thread
+from queue import Queue
+
+try:
+    from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+except ImportError:
+    from http.server import BaseHTTPRequestHandler, HTTPServer 
+
+
+class MyHandler(BaseHTTPRequestHandler):
+
+    def _set_headers(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+
+    def do_GET(self):
+        self._set_headers()
+        self.wfile.write(bytes("OK\n", 'utf-8'))
+
+    def do_POST(self):
+        self._set_headers()
+        self.data_string = self.rfile.read(int(self.headers['Content-Length']))
+
+        self.send_response(200)
+        self.end_headers()
+
+def do_stuff(httpd):
+  while True:
+    httpd.handle_request()
+
+
+PORT_NUMBER = 0
+HOSTNAME = '127.0.0.1'
+server_class = HTTPServer
+httpd = server_class((HOSTNAME, PORT_NUMBER), MyHandler)
+
+q = Queue(maxsize=0)
+num_threads = 10
+
+for i in range(num_threads):
+  worker = Thread(target=do_stuff, args=(httpd,))
+  worker.setDaemon(True)
+  worker.start()
+
+end_point_url = "http://%s:%d" % (HOSTNAME, httpd.socket.getsockname()[1]) 
+print(end_point_url)
+sys.stdout.flush()
+
+pygame.init()
+windowSurface = pygame.display.set_mode((500, 400), 0, 32)
+
+# run the game loop
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()

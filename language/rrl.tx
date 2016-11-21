@@ -1,0 +1,39 @@
+// textX model for the Resource Relation Language
+
+AppModel: 
+    instructions*=Instruction
+;
+
+Instruction: 
+    GetInstruction | GeneralIntruction
+;
+
+GetInstruction: 
+    'get' resource_list+=Resource[','] 'from' provider=ID ('/' path=/\S*/)?   
+;
+
+
+GeneralIntruction:
+    verb=ID target_object_list+=Resource[','] relation=Relation source_object_list+=Resource[',']
+;
+
+Relation: ContainerRelation | PlacementRelation;
+
+Resource: name=ID prop=PropertyDef? ;
+
+PropertyDef:
+    '['properties+=Property[',']']'
+;
+
+Property: name=ID '=' value=Value;
+
+
+Value:
+     STRING | INT | FLOAT | ID
+;
+
+ContainerRelation: "from" | "into";
+
+PlacementRelation: 
+    "in" | "on" | "after" | "before" | "below" | "above"
+; 

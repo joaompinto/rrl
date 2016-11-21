@@ -1,0 +1,31 @@
+= Resources
+In RRL you allocate resources with the `get` instruction:
+
+    get resource_name[...,resource_name2] from provider_name
+
+*resource_name* - Resource names are domain specific, it's purpose will depend on the provider implementation. For example, a "system" provider can use the name to identify the resource type to be created, for example, a "canvas" could trigger the creation of a graphical canvas, while a "gallery" provider could use the resource name to an image filename. 
+
+
+== Resource providers
+Resource providers are invoked by the RRL interpreter, they must be executables in the _providers_ directory. The requested resource names will be sent to the providers stdin upon execution. Provides must write (to stdout) a JSON indicating the URL for earch resource_name that was requested.
+
+Example:
+```
+cat | providers/system/system << _EOF_
+    { 
+        "action": "get",
+        "resources": [
+                { "name": "canvas" }
+            ] 
+    } 
+_EOF_
+```
+call resources/system:
+The reply:    
+    { 
+        'status' : 'success', 
+        'resources: [ 
+            { 'url' : 'canvas-345' }
+            ]
+    }
+```

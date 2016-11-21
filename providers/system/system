@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+""" The system provider """
+import sys
+import json
+from subprocess import PIPE, Popen, STDOUT
+from os.path import realpath, dirname, join
+
+ON_POSIX = 'posix' in sys.builtin_module_names
+
+def handle_request(request_data):
+    """ handle a request """
+    request = json.loads(request_data)
+    resource_list = request['resources']
+    response = {}
+    response['status'] = 'sucess'
+    response['resources'] = rerource_url_list = []
+    for resource in resource_list:
+        resource_name = resource['name']
+        current_script_dir = dirname(realpath(__file__))
+        providers_path = join(current_script_dir, 'resources', resource_name)
+        process = Popen([providers_path], stdout=PIPE, stderr=STDOUT)
+        resource_url = process.stdout.readline()
+        rerource_url_list.append({"url": resource_url.decode("utf-8") .strip("\n")})
+    print(json.dumps(response))
+
+if __name__ == '__main__':
+    handle_request(sys.stdin.read())
+
